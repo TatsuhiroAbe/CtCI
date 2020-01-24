@@ -17,28 +17,22 @@ struct ListNode {
     ListNode(int x) : val(x), next(nullptr) {}
 };
 
-ListNode *partition(ListNode *node, int x) {
-    ListNode *head = node;
-    ListNode *tail = node;
-
-    while (node != nullptr) {
-        ListNode *next = node->next;
-        if (node->val < x) {
-            node->next = head;
-            head = node;
+void removeDups(ListNode *head) {
+    unordered_set<int> set;
+    ListNode *prev = nullptr;
+    while (head != nullptr) {
+        if (set.find(head->val) != set.end()) {
+            prev->next = head->next;
         } else {
-            tail->next = node;
-            tail = node;
+            set.insert(head->val);
+            prev = head;
         }
-        node = next;
+        head = head->next;
     }
-    tail->next = nullptr;
-
-    return head;
 }
 
 int main() {
-    vector<int> values{3, 10, 5, 8, 4, 1, 2, 9, 6};
+    vector<int> values{3, 2, 5, 3, 4, 1, 2, 3, 6};
     ListNode *dummy = new ListNode(0);
     ListNode *curr = dummy;
     for (int n : values) {
@@ -46,13 +40,14 @@ int main() {
         curr = curr->next;
     }
 
-    ListNode *parted = partition(dummy->next, 5);
+    removeDups(dummy->next);
 
-    curr = parted;
+    curr = dummy->next;
     while (curr != nullptr) {
-        cout << curr->val << " "; // 2 1 4 3 10 5 8 9 6
+        cout << curr->val << " "; // 3 2 5 4 1 6
         curr = curr->next;
     }
 
     return 0;
 }
+

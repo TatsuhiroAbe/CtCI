@@ -17,28 +17,23 @@ struct ListNode {
     ListNode(int x) : val(x), next(nullptr) {}
 };
 
-ListNode *partition(ListNode *node, int x) {
-    ListNode *head = node;
-    ListNode *tail = node;
-
-    while (node != nullptr) {
-        ListNode *next = node->next;
-        if (node->val < x) {
-            node->next = head;
-            head = node;
-        } else {
-            tail->next = node;
-            tail = node;
+void removeDups(ListNode *head) {
+    ListNode *curr = head;
+    while (curr != nullptr) {
+        ListNode *runner = curr;
+        while (runner->next != nullptr) {
+            if (runner->next->val == curr->val) {
+                runner->next = runner->next->next;
+            } else {
+                runner = runner->next;
+            }
         }
-        node = next;
+        curr = curr->next;
     }
-    tail->next = nullptr;
-
-    return head;
 }
 
 int main() {
-    vector<int> values{3, 10, 5, 8, 4, 1, 2, 9, 6};
+    vector<int> values{3, 2, 5, 3, 4, 1, 2, 3, 6};
     ListNode *dummy = new ListNode(0);
     ListNode *curr = dummy;
     for (int n : values) {
@@ -46,11 +41,11 @@ int main() {
         curr = curr->next;
     }
 
-    ListNode *parted = partition(dummy->next, 5);
+    removeDups(dummy->next);
 
-    curr = parted;
+    curr = dummy->next;
     while (curr != nullptr) {
-        cout << curr->val << " "; // 2 1 4 3 10 5 8 9 6
+        cout << curr->val << " "; // 3 2 5 4 1 6
         curr = curr->next;
     }
 
