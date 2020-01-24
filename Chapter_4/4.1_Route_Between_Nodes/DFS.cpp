@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <list>
 #include <stack>
 #include <queue>
 #include <map>
@@ -10,26 +11,28 @@
 #include <algorithm>
 using namespace std;
 
-bool search(vector<vector<int>> &G, int start, int end) {
-    queue<int> q;
-    q.push(start);
-    vector<bool> visited(G.size(), false);
-    visited[start] = true;
-
-    while (!q.empty()) {
-        int u = q.front(); q.pop();
-        for (int v : G[u]) {
-            if (visited[v]) continue;
-
-            if (v == end) {
-                return true;
-            } else {
-                visited[v] = true;
-                q.push(v);
-            }
-        }
+bool dfs(vector<vector<int>> &G, int u, int end, vector<bool> &visited) {
+    if (u == end) {
+        return true;
     }
-    return false;
+
+    visited[u] = true;
+    bool res = false;
+    for (int v : G[u]) {
+        if (visited[v]) continue;
+        res |= dfs(G, v, end, visited);
+    }
+    return res;
+}
+
+bool search(vector<vector<int>> &G, int start, int end) {
+    if (G.empty()) {
+        return false;
+    }
+
+    int n = (int)G.size();
+    vector<bool> visited(n, false);
+    return dfs(G, start, end, visited);
 }
 
 int main() {
