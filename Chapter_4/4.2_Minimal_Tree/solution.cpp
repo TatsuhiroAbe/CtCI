@@ -69,6 +69,6 @@ int main() {
     vector<int> nums;
     inOrder(root, nums);
 
-    cout << isEqual(array, nums) << endl;
+    cout << isEqual(array, nums) << endl; // true
     return 0;
 }
