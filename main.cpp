@@ -11,61 +11,50 @@
 #include <algorithm>
 using namespace std;
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(nullptr) {}
+class Animal {
+private:
+    int order;
+    string name;
+
+public:
+    Animal(string _name) {
+        this->name = _name;
+    }
+
+    void setOrder(int n) {
+        this->order = n;
+    }
+
+    int getOrder() {
+        return order;
+    }
 };
 
-ListNode *findBeginning(ListNode *head) {
-    ListNode *slow = head;
-    ListNode *fast = head;
+class Dog : public Animal {
+public:
+    Dog(string _name) : Animal(_name) {}
+};
+class Cat : public Animal {
+    Cat(string _name) : Animal(_name) {}
+};
 
-    while (fast != nullptr && fast->next != nullptr) {
-        slow = slow->next;
-        fast = fast->next->next;
-        if (slow == fast) {
-            break;
-        }
-    }
+class AnimalQueue {
+private:
+    list<Dog> dogs;
+    list<Cat> cats;
+    int order = 0;
 
-    if (fast == nullptr || fast->next == nullptr) {
-        return nullptr;
-    }
+public:
+    void enqueue(Animal animal) {
+        animal.setOrder(order);
+        order++;
 
-    slow = head;
-    while (slow != fast) {
-        slow = slow->next;
-        fast = fast->next;
+
     }
-    return slow;
-}
+};
 
 int main() {
-    vector<int> values{3, 2, 6, 8, 4};
-    ListNode *start = new ListNode(values[0]);
-    ListNode *curr = start;
-    for (int i = 1; i < values.size(); i++) {
-        curr->next = new ListNode(values[i]);
-        curr = curr->next;
-    }
-    curr->next = start;
+    Dog dog = Dog("inu");
 
-    ListNode *head = new ListNode(1);
-    head->next = new ListNode(2);
-    head->next->next  = new ListNode(5);
-    head->next->next->next = start;
-
-    /*
-      1 -> 2 -> 5 -> 3
-                  /    \
-                4        2
-                 \      /
-                  8 <- 6
-    */
-
-    ListNode *beginning = findBeginning(head);
-    cout << beginning->val << endl; // 3
-
-    return 0;
+    cout << typeid(dog).name() << endl;
 }
