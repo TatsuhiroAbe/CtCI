@@ -13,34 +13,68 @@
 
 using namespace std;
 
-int binarySearch(vector<int> &nums, int target, int left, int right) {
-    while (left <= right) {
-        int mid = (left + right) / 2;
-        if (nums[mid] == -1 || target < nums[mid]) {
-            right = mid - 1;
-        } else if (nums[mid] < target) {
-            left = mid + 1;
+class RankNode {
+public:
+    int left_size = 0;
+    RankNode *left;
+    RankNode *right;
+    int data = 0;
+
+    RankNode (int d) {
+        data = d;
+    }
+
+    void insert(int d) {
+        if (d <= data) {
+            if (left != nullptr) {
+                left->insert(d);
+            } else {
+                left = new RankNode(d);
+            }
+            left_size++;
         } else {
-            return mid;
+            if (right != nullptr) {
+                right->insert(d);
+            } else {
+                right = new RankNode(d);
+            }
         }
     }
-    return -1;
+
+    int getRank(int d) {
+        if (d == data) {
+            return left_size;
+        } else if (d < data) {
+            if (left == nullptr) {
+                return -1;
+            } else {
+                return left->getRank(d);
+            }
+        } else {
+            int right_rank = (right == nullptr) ? -1 : right->getRank(d);
+            if (right_rank == -1) {
+                return -1;
+            } else {
+                return left_size + 1 + right_rank;
+            }
+        }
+    }
+};
+
+RankNode *root = nullptr;
+
+void track(int num) {
+    if (root == nullptr) {
+        root = new RankNode(num);
+    } else {
+        root->getRank(num);
+    }
 }
 
-int search(vector<int> &listy, int target) {
-    int index = 1;
-    while (listy[index] != -1 && listy[index] < target) {
-        index *= 2;
-    }
-    return binarySearch(listy, target, index / 2, index);
+int getRank(int num) {
+    return root->getRank(num);
 }
 
 int main() {
-    vector<int> listy(1000, -1);
-    vector<int> values{1, 2, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 16, 18};
-    for (int i = 0; i < values.size(); i++) listy[i] = values[i];
-
-    cout << search(listy, 10) << endl; // 7
-
-    return 0;
+    
 }
