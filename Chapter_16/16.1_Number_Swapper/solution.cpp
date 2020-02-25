@@ -12,7 +12,17 @@
 
 using namespace std;
 
+void mySwap(int &a, int &b) {
+    a = b - a;
+    b = b - a;
+    a = a + b;
+}
 
 int main() {
+    int a = 2, b = 3;
+    cout << "a = " << a << " b = " << b << endl;
 
+    mySwap(a, b);
+    cout << "a = " << a << " b = " << b << endl;
+    return 0;
 }
